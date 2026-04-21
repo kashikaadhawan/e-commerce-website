@@ -1,73 +1,95 @@
+# 🛍️ JavaShop — E-Commerce GUI Mini Project
 
-# QuickCart — E-Commerce Desktop Application
-
-A simple desktop e-commerce application built with Java and Java Swing.
-No external libraries or frameworks required.
+A full GUI e-commerce desktop app built with **Java Swing** (no external libraries needed).
 
 ---
 
-## Project Files
+## 📁 Project Structure
 
-| File | Description |
-|---|---|
-| `Models.java` | Data classes — Product, CartItem, Order, User, and custom exception |
-| `ShopService.java` | All business logic — catalog, cart, order processing, background thread |
-| `QuickCart.java` | Full Swing GUI — main entry point |
-
----
-
-## How to Compile and Run
-
-Make sure all three files are in the same folder.
-
-**Compile:**
 ```
-javac Models.java ShopService.java QuickCart.java
-```
-
-**Run:**
-```
-java QuickCart
+ecommerce/
+└── src/
+    └── com/shop/
+        ├── model/
+        │   ├── Product.java       ← Store item (encapsulation)
+        │   ├── User.java          ← Customer account
+        │   ├── CartItem.java      ← Cart line item (composition)
+        │   └── Order.java         ← Completed purchase
+        ├── service/
+        │   └── ShopFacade.java    ← All business logic in one place
+        │       (contains UserService, CartService, OrderService, ProductService)
+        └── ui/
+            ├── MainWindow.java    ← JFrame root + navigation ← RUN THIS
+            ├── AuthPanel.java     ← Login & Register forms
+            ├── StorePanel.java    ← Product grid + search/filter
+            ├── CartPanel.java     ← Cart view + checkout
+            ├── OrdersPanel.java   ← Order history
+            ├── Theme.java         ← Colours & fonts
+            └── Widgets.java       ← Reusable styled components
 ```
 
-Requires **Java 16 or higher** (uses switch expressions).
+---
+
+## ▶️ How to Compile & Run
+
+### Compile
+```bash
+# From inside the ecommerce/ folder:
+javac -d out $(find src -name "*.java")
+```
+
+On **Windows** (Command Prompt):
+```cmd
+dir /s /b src\*.java > sources.txt
+javac -d out @sources.txt
+```
+
+### Run
+```bash
+java -cp out com.shop.ui.MainWindow
+```
 
 ---
 
-## Features
-
-- Browse a catalog of 7 products
-- Add items to cart with quantity selection
-- Remove items from cart
-- View running total
-- Checkout with payment method selection
-- Order receipt displayed after purchase
+## 🔑 Demo Account
+| Field    | Value     |
+|----------|-----------|
+| Username | `demo`    |
+| Password | `demo123` |
 
 ---
 
-## Java Concepts Used
+## 🖥️ Screens
 
-| Concept | Where |
-|---|---|
-| Interface | `Purchasable` interface in Models.java |
-| Dynamic Polymorphism | `Product implements Purchasable`; cart uses `Purchasable` type |
-| Custom Exception | `CartException` — thrown on invalid cart/order operations |
-| try / catch / throw / throws / finally | `addToCart()` and `placeOrder()` in ShopService.java |
-| Multithreading (Producer-Consumer) | `OrderProcessor implements Runnable`; orders queued and processed in background |
-| ArrayList / HashMap | Product catalog, cart, order list, user store |
-| Streams & Lambdas | Cart total, order filtering |
-| Java Swing | JFrame, JPanel, JButton, CardLayout, JDialog, JScrollPane |
+| Screen        | Description                                        |
+|---------------|----------------------------------------------------|
+| Login         | Sign in with username + password                   |
+| Register      | Create new account with validation                 |
+| Store         | Browse 14 products, filter by category, search     |
+| Cart          | View items, remove items, see running total        |
+| Checkout      | Choose payment method, get order receipt           |
+| Order History | View all past orders with items and totals         |
 
 ---
 
-## How It Works
+## 🧠 Java Concepts Used
 
-1. App opens directly on the Store screen
-2. Click **Add to Cart** on any product — enter quantity in the dialog
-3. Click the **Cart** tab to review items
-4. Click **Checkout** — select a payment method — receipt is shown
-5. Background thread processes the order and logs it to the console
+| Concept                    | Where Used                                              |
+|----------------------------|---------------------------------------------------------|
+| **Encapsulation**          | All model classes — private fields + getters/setters    |
+| **Object Composition**     | `CartItem` HAS-A `Product`; `Order` HAS-A `List<CartItem>` |
+| **ArrayList**              | Product catalog, cart, order history                    |
+| **HashMap**                | User database (username → User)                        |
+| **Streams & Lambdas**      | `filter()`, `map()`, `mapToDouble()`, `sum()` in services |
+| **Iterator**               | Safe cart item removal                                  |
+| **try-catch**              | Input validation, number parsing                        |
+| **Static factory methods** | `Widgets.primaryBtn()`, `Widgets.card()`, etc.         |
+| **Facade Pattern**         | `ShopFacade` unifies all services                       |
+| **CardLayout**             | Switch between Auth and Shop views                      |
+| **Swing GUI**              | `JFrame`, `JPanel`, `JButton`, `JLabel`, `JScrollPane` |
+| **SwingUtilities.invokeLater** | Correct EDT thread usage                           |
+| **LocalDateTime**          | Order timestamps                                        |
 
 ---
 
-*Single-module project. All data is stored in memory — no database needed.*
+*All data is stored in-memory — no external database required. Pure Java, zero dependencies.*
